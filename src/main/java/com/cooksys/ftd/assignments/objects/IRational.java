@@ -3,7 +3,6 @@ package com.cooksys.ftd.assignments.objects;
 import com.cooksys.ftd.assignments.objects.util.MissingImplementationException;
 
 interface IRational {
-
 	/**
 	 * @return the numerator of this rational number
 	 */
@@ -54,7 +53,11 @@ interface IRational {
 	 *             if the numerator of this rational value is 0
 	 */
 	default IRational invert() throws IllegalStateException {
-		throw new MissingImplementationException();
+		if(getNumerator() == 0){
+			throw new IllegalStateException("Cannot invert numerator of zero");
+		}
+
+		return construct(getDenominator(), getNumerator());
 	}
 
 	/**
@@ -69,7 +72,14 @@ interface IRational {
 	 *             if that is null
 	 */
 	default IRational add(IRational that) throws IllegalArgumentException {
-		throw new MissingImplementationException();
+		if(that == null){
+			throw new IllegalArgumentException("Cannot add null value");
+		}
+
+		int num = (getNumerator() * that.getDenominator()) + (that.getNumerator() * getDenominator());
+		int denom = getDenominator() * that.getDenominator();
+
+		return construct(num, denom);
 	}
 
 	/**
@@ -84,7 +94,14 @@ interface IRational {
 	 *             if that is null
 	 */
 	default IRational sub(IRational that) throws IllegalArgumentException {
-		throw new MissingImplementationException();
+		if(that == null){
+			throw new IllegalArgumentException("Cannot subtract null value");
+		}
+
+		int num = (getNumerator() * that.getDenominator()) - (that.getNumerator() * getDenominator());
+		int denom = getDenominator() * that.getDenominator();
+
+		return construct(num, denom);
 	}
 
 	/**
@@ -99,7 +116,14 @@ interface IRational {
 	 *             if that is null
 	 */
 	default IRational mul(IRational that) throws IllegalArgumentException {
-		throw new MissingImplementationException();
+		if(that == null){
+			throw new IllegalArgumentException("Cannot multiply null value");
+		}
+
+		int num = (getNumerator() * that.getNumerator());
+		int denom = getDenominator() * that.getDenominator();
+
+		return construct(num, denom);
 	}
 
 	/**
@@ -114,6 +138,13 @@ interface IRational {
 	 *             if that is null or if the numerator of that is 0
 	 */
 	default IRational div(IRational that) throws IllegalArgumentException {
-		throw new MissingImplementationException();
+		if(that == null || that.getNumerator() == 0){
+			throw new IllegalArgumentException("Cannot divide null value or numerator of value 0");
+		}
+
+		int num = getNumerator() * that.getDenominator();
+		int denom = getDenominator() * that.getNumerator();
+
+		return construct(num, denom);
 	}
 }

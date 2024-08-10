@@ -3,6 +3,9 @@ package com.cooksys.ftd.assignments.objects;
 import com.cooksys.ftd.assignments.objects.util.MissingImplementationException;
 
 public class SimplifiedRational implements IRational {
+    private final int numerator;
+    private final int denominator;
+
     /**
      * Determines the greatest common denominator for the given values
      *
@@ -12,7 +15,15 @@ public class SimplifiedRational implements IRational {
      * @throws IllegalArgumentException if a <= 0 or b < 0
      */
     public static int gcd(int a, int b) throws IllegalArgumentException {
-        throw new MissingImplementationException();
+        if(a <= 0 || b < 0){
+            throw new IllegalArgumentException();
+        }
+
+        if(b == 0){
+            return a;
+        } else {
+            return gcd(b, a % b);
+        }
     }
 
     /**
@@ -29,7 +40,23 @@ public class SimplifiedRational implements IRational {
      * @throws IllegalArgumentException if the given denominator is 0
      */
     public static int[] simplify(int numerator, int denominator) throws IllegalArgumentException {
-        throw new MissingImplementationException();
+        if(denominator == 0){
+            throw new IllegalArgumentException();
+        }
+
+        int gcd = 0;
+
+        if(numerator < 0 && denominator < 0){
+            gcd = gcd(numerator * -1, denominator * -1);
+        } else if(numerator < 0){
+            gcd = gcd(numerator * -1, denominator);
+        }else if(denominator < 0){
+            gcd = gcd(numerator, denominator * -1);
+        } else{
+            gcd = gcd(numerator, denominator);
+        }
+
+        return new int[]{numerator/gcd, denominator/gcd};
     }
 
     /**
@@ -45,7 +72,20 @@ public class SimplifiedRational implements IRational {
      * @throws IllegalArgumentException if the given denominator is 0
      */
     public SimplifiedRational(int numerator, int denominator) throws IllegalArgumentException {
-        throw new MissingImplementationException();
+        if(denominator == 0){
+            throw new IllegalArgumentException();
+        }
+
+        if(numerator == 0){
+            this.numerator = numerator;
+            this.denominator = denominator;
+        }else {
+            int[] simplified = simplify(numerator, denominator);
+
+            this.numerator = simplified[0];
+            this.denominator = simplified[1];
+
+        }
     }
 
     /**
@@ -53,7 +93,7 @@ public class SimplifiedRational implements IRational {
      */
     @Override
     public int getNumerator() {
-        throw new MissingImplementationException();
+        return numerator;
     }
 
     /**
@@ -61,7 +101,7 @@ public class SimplifiedRational implements IRational {
      */
     @Override
     public int getDenominator() {
-        throw new MissingImplementationException();
+        return denominator;
     }
 
     /**
@@ -77,7 +117,7 @@ public class SimplifiedRational implements IRational {
      */
     @Override
     public SimplifiedRational construct(int numerator, int denominator) throws IllegalArgumentException {
-        throw new MissingImplementationException();
+        return new SimplifiedRational(numerator, denominator);
     }
 
     /**
@@ -88,7 +128,7 @@ public class SimplifiedRational implements IRational {
      */
     @Override
     public boolean equals(Object obj) {
-        throw new MissingImplementationException();
+        return obj instanceof Rational && getNumerator() == ((Rational) obj).getNumerator() && getDenominator() == ((Rational) obj).getDenominator();
     }
 
     /**
@@ -100,6 +140,18 @@ public class SimplifiedRational implements IRational {
      */
     @Override
     public String toString() {
-        throw new MissingImplementationException();
+        if(getNumerator() < 0 && getDenominator() < 0){
+            return (getNumerator() * -1) + "/" + (getDenominator() * -1);
+        } else if(getDenominator() < 0){
+            return "-" + getNumerator() + "/" + (getDenominator() * -1);
+        }
+
+        return getNumerator() + "/" + getDenominator();
     }
+
+    /*public static void main(String[] args) {
+        SimplifiedRational simplifiedRational = new SimplifiedRational(-2, -2);
+        SimplifiedRational sr = new SimplifiedRational(2, 2);
+        System.out.println(simplifiedRational.add(sr));
+    }*/
 }
